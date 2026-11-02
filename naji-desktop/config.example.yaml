@@ -1,0 +1,38 @@
+# Naji Desktop - Configuração de exemplo
+# Copie para %LOCALAPPDATA%\Naji\config.yaml (Windows) ou ~/.config/Naji/config.yaml (Linux)
+# e ajuste conforme necessário
+
+server:
+  voice_endpoint: "http://xserver:9931/v1"    # Endpoint do modelo de voz (LFM3-Omni via /v1/realtime)
+  executor_endpoint: "http://xserver:9931/v1" # Endpoint do modelo executor (Qwen/Llama via /v1/chat/completions)
+  api_key: null                               # API key (opcional). Use env NAJI_SERVER__API_KEY para não salvar no arquivo
+
+models:
+  voice_model: "default"      # Nome do modelo de voz (router mode do llama.cpp)
+  executor_model: "default"   # Nome do modelo executor
+  same_model: true            # true = modo único (LFM3-Omni faz tudo), false = modo dual (voz + executor separados)
+
+audio:
+  sample_rate_in: 16000       # Taxa de captura (Hz)
+  sample_rate_out: 24000      # Taxa de playback (Hz)
+  vad_threshold: 0.5          # Threshold do VAD (0.0-1.0)
+  barge_in_enabled: true      # Habilita interrupção por VAD durante resposta
+  vad_min_speech_ms: 180      # Duração mínima de fala para commit (ms)
+  vad_pre_roll_ms: 500        # Pré-roll antes da fala detectada (ms)
+  jitter_buffer_ms: 100       # Buffer de jitter para streaming TTS (ms)
+  chunk_ms: 30                # Tamanho do chunk de áudio (ms)
+
+ui:
+  theme: "dark"               # Tema (apenas dark suportado)
+  hotkey: "ctrl+alt+space"    # Hotkey global para PTT (ex: ctrl+alt+space, win+space, f1)
+  start_minimized: false      # Iniciar minimizado no tray
+  show_tray: true             # Mostrar ícone na bandeja do sistema
+
+tools:
+  enabled:                    # Ferramentas nativas habilitadas
+    - "media_control"
+    - "weather"
+    - "datetime"
+    - "web_search"
+  weather_unit: "celsius"     # Unidade de temperatura (celsius/fahrenheit)
+  web_search_max_results: 5   # Máximo de resultados na busca web

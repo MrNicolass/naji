@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naji · voz em tempo real</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="pulse" id="pulse"></span>
+    <h1>Naji</h1>
+    <span class="sub">llama.cpp · LFM3-Omni</span>
+  </div>
+  <div class="badges" id="badges">
+    <span class="badge pending" id="badge-health">health</span>
+    <span class="badge pending" id="badge-build">build</span>
+    <span class="badge pending" id="badge-model">modelo</span>
+    <span class="badge pending" id="badge-realtime">realtime</span>
+    <span class="badge pending" id="badge-tts">tts</span>
+  </div>
+  <div class="actions">
+    <button id="btn-check" class="btn">Verificar</button>
+    <button id="btn-settings" class="btn ghost">Configurações</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="chat">Conversa</button>
+  <button class="tab" data-tab="tts">TTS</button>
+  <button class="tab" data-tab="file">Arquivo</button>
+</nav>
+
+<main class="layout">
+  <section class="panel">
+    <div class="tabpane active" id="pane-chat">
+      <div class="messages" id="messages">
+        <div class="empty" id="empty-chat">
+          <h2>Pronto para conversar</h2>
+          <p>Segure <kbd>Espaço</kbd> (ou o botão abaixo) e fale. Solte para enviar o turno. Use fones para evitar eco.</p>
+          <p class="dim">O primeiro passo é rodar <strong>Verificar</strong> e confirmar build, modelo e taxas de áudio.</p>
+        </div>
+      </div>
+      <div class="composer">
+        <button id="ptt" class="ptt"><span class="ptt-label">Segure para falar</span><span class="ptt-key">Espaço</span></button>
+        <div class="controls">
+          <label class="switch"><input type="checkbox" id="vad"> <span>VAD</span></label>
+          <label class="range">limiar <input type="range" id="threshold" min="1" max="100" value="25"><span id="threshold-val">25</span></label>
+          <button id="btn-mute" class="btn ghost small" title="Ignorar o microfone durante a reprodução">Mudo</button>
+          <button id="btn-cancel" class="btn ghost small" title="Cancelar a resposta atual">Cancelar</button>
+        </div>
+        <div class="wavebox">
+          <canvas id="wave" width="260" height="44"></canvas>
+          <span id="state-label" class="state">desconectado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-tts">
+      <div class="pane-inner">
+        <h2>TTS avulso</h2>
+        <p class="dim">Testa o endpoint <code>POST /tts</code> do llama.cpp com streaming de PCM.</p>
+        <textarea id="tts-text" rows="4" placeholder="Digite o texto a sintetizar">Olá! Este é um teste de síntese de voz no llama.cpp.</textarea>
+        <div class="row">
+          <label>voz
+            <select id="tts-voice"><option value="female">female</option><option value="male">male</option></select>
+          </label>
+          <label>idioma <input id="tts-lang" value="pt" size="5"></label>
+          <button id="btn-tts" class="btn">Gerar e tocar</button>
+          <button id="btn-tts-stop" class="btn ghost">Parar</button>
+          <button id="btn-tts-save" class="btn ghost" disabled>Salvar WAV</button>
+        </div>
+        <div class="meta" id="tts-meta">—</div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-file">
+      <div class="pane-inner">
+        <h2>Enviar um WAV como turno</h2>
+        <p class="dim">O navegador decodifica o arquivo, reamostra para a taxa do modelo e envia em chunks de 100 ms pelo <code>/v1/realtime</code>.</p>
+        <input type="file" id="file-input" accept="audio/*,.wav,.mp3,.ogg,.m4a">
+        <div class="row">
+          <button id="btn-file" class="btn">Enviar turno</button>
+          <button id="btn-file-stop" class="btn ghost">Cancelar</button>
+        </div>
+        <div class="meta" id="file-meta">—</div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="card">
+      <h2>Preflight</h2>
+      <div id="check-details" class="kv"><span class="dim">Ainda não verificado.</span></div>
+    </div>
+    <div class="card">
+      <h2>Métricas</h2>
+      <div id="metrics" class="metrics"></div>
+    </div>
+    <div class="card grow">
+      <div class="card-head">
+        <h2>Eventos</h2>
+        <button id="btn-clear-events" class="btn ghost tiny">limpar</button>
+      </div>
+      <div id="events" class="events"></div>
+    </div>
+  </aside>
+</main>
+
+<div class="modal hidden" id="settings">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>Configurações</h2>
+      <button id="btn-settings-close" class="btn ghost tiny">fechar</button>
+    </div>
+    <label>Endpoint do llama-server
+      <input id="set-server" placeholder="http://xserver:9931/v1">
+    </label>
+    <label>Modelo (router mode)
+      <input id="set-model" placeholder="default">
+    </label>
+    <label>Modalidades de saída
+      <select id="set-modalities">
+        <option value="text,audio">text + audio</option>
+        <option value="audio">audio</option>
+        <option value="text">text</option>
+      </select>
+    </label>
+    <div class="row">
+      <label>Voz (só na aba TTS)
+        <select id="set-voice"><option value="female">female</option><option value="male">male</option></select>
+      </label>
+      <label>Idioma <input id="set-lang" size="5"></label>
+    </div>
+    <label class="switch"><input type="checkbox" id="set-transcribe"> <span>Transcrever minha fala</span></label>
+    <label class="switch"><input type="checkbox" id="set-barge"> <span>VAD interrompe a resposta (use fones)</span></label>
+    <label>Instruções (system prompt)
+      <textarea id="set-instructions" rows="4"></textarea>
+    </label>
+    <div class="row end">
+      <button id="btn-settings-reset" class="btn ghost">Restaurar padrões</button>
+      <button id="btn-settings-save" class="btn">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+<script src="app.js?v=5"></script>
+</body>
+</html>
