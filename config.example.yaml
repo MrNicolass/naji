@@ -1,0 +1,82 @@
+# Naji Desktop — example configuration
+# Copy to %LOCALAPPDATA%\Naji\config.yaml (Windows) or ~/.config/Naji/config.yaml
+# Environment variables override this file (e.g. NAJI_SERVER__API_KEY).
+
+server:
+  voice_endpoint: "http://xserver:9931/v1"
+  executor_endpoint: "http://xserver:9931/v1"
+  api_key: null
+  request_timeout_s: 30.0
+  transcribe_timeout_s: 120.0
+
+models:
+  mode: "single"              # single = one omni model; dual = voice + executor
+  voice_model: "default"
+  executor_model: "default"
+  # System prompt (editable in the settings dialog).
+  instructions: >-
+    Você é Naji, um assistente de voz conciso que roda no desktop do usuário.
+    Responda sempre em português do Brasil, de forma curta, natural e direta,
+    como uma resposta falada. Não use formatação markdown, listas, títulos,
+    negrito ou emojis. Use as ferramentas fornecidas para executar ações e
+    para buscar informações atuais (notícias, clima, cotações, horários);
+    nunca invente fatos, resultados ou notícias. Nunca diga que uma ação foi
+    feita se a ferramenta não retornou sucesso.
+
+audio:
+  sample_rate_in: 16000
+  sample_rate_out: 24000
+  input_device: null          # sounddevice index (null = system default)
+  output_device: null
+  # Cap for the adaptive VAD threshold (actual = 4x ambient noise, clamped to
+  # [0.05, vad_threshold]; lower = more sensitive).
+  vad_threshold: 0.5
+  barge_in_enabled: true
+  vad_min_speech_ms: 180
+  vad_silence_ms: 700
+  vad_pre_roll_ms: 500
+  jitter_buffer_ms: 100
+  chunk_ms: 30
+  min_record_ms: 300
+  max_record_s: 60
+
+ui:
+  theme: "system"             # system | dark | light
+  locale: "system"            # system | pt-BR | en
+  hotkey: "ctrl+alt+space"
+  speech_mode: "ptt"          # ptt | toggle | vad
+  auto_hide_ms: 8000
+  # Follow-up window: how long the response stays visible (PTT/toggle) or how
+  # long Naji keeps listening for your next phrase (VAD).
+  follow_up_ms: 6000
+  history_enabled: true
+  reduced_motion: false
+  start_with_windows: false
+  start_minimized: true
+  show_tray: true
+
+tools:
+  enabled:
+    - "media_control"
+    - "volume_control"
+    - "notification"
+    - "timer_control"
+    - "weather"
+    - "datetime"
+    - "web_search"
+    - "screenshot"
+    - "app_control"
+    - "power_control"
+    - "window_control"
+    - "file_control"
+  weather_unit: "celsius"
+  web_search_max_results: 5
+  tool_loop_limit: 4
+
+wake:
+  enabled: false
+  # Built-in model name (hey_jarvis, alexa, hey_mycroft) or a path to a
+  # custom .onnx model. Listens only while the bar is hidden and idle.
+  word: "hey_jarvis"
+  # Detection score 0.05-1.0 (lower = more sensitive, more false positives).
+  threshold: 0.4
