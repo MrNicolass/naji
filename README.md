@@ -46,7 +46,7 @@ Logs: `%LOCALAPPDATA%\Naji\logs\naji.log` (rotating).
 .\.venv\Scripts\python.exe -m ruff check naji tests
 ```
 
-Integration tests against `http://xserver:9931/v1` are skipped automatically
+Integration tests against `http://localhost:9931/v1` are skipped automatically
 when the server is offline.
 
 ## Build

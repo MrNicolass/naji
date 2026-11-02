@@ -12,7 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-SERVER_URL = "http://xserver:9931/v1"
+SERVER_URL = "http://localhost:9931/v1"
 
 
 def _root(base: str) -> str:
@@ -35,12 +35,12 @@ def server_url() -> str:
 
 @pytest.fixture(scope="session")
 def server_ok(server_url: str) -> str:
-    """Pula os testes de integração se o xserver estiver fora do ar."""
+    """Pula os testes de integração se o servidor local estiver fora do ar."""
     try:
         response = httpx.get(_root(server_url) + "/health", timeout=5.0)
         response.raise_for_status()
     except httpx.HTTPError as exc:
-        pytest.skip(f"xserver indisponível em {server_url}: {type(exc).__name__}: {exc}")
+        pytest.skip(f"servidor indisponível em {server_url}: {type(exc).__name__}: {exc}")
     return server_url
 
 

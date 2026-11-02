@@ -3,8 +3,8 @@
 # Environment variables override this file (e.g. NAJI_SERVER__API_KEY).
 
 server:
-  voice_endpoint: "http://xserver:9931/v1"
-  executor_endpoint: "http://xserver:9931/v1"
+  voice_endpoint: "http://localhost:9931/v1"
+  executor_endpoint: "http://localhost:9931/v1"
   api_key: null
   request_timeout_s: 30.0
   transcribe_timeout_s: 120.0

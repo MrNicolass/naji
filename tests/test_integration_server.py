@@ -1,10 +1,10 @@
-"""Testes de integração end-to-end contra o xserver real (item 13 do _ActivePlan).
+"""Testes de integração end-to-end contra o servidor local real.
 
 Cobrem: preflight, TTS, STT (transcription realtime), chat completions
 (com e sem tool calling), turno de voz completo via /v1/realtime e o
 pipeline dual do Orchestrator (STT → Executor+Tools → TTS).
 
-Todos os testes são pulados automaticamente se o xserver estiver fora do ar.
+Todos os testes são pulados automaticamente se o servidor estiver fora do ar.
 """
 
 from __future__ import annotations

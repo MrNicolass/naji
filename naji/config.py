@@ -46,11 +46,11 @@ class ServerConfig(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     voice_endpoint: str = Field(
-        default="http://xserver:9931/v1",
+        default="http://localhost:9931/v1",
         description="Voice endpoint (WS /v1/realtime + /tts + /transcribe).",
     )
     executor_endpoint: str = Field(
-        default="http://xserver:9931/v1",
+        default="http://localhost:9931/v1",
         description="Executor endpoint (HTTP /v1/chat/completions).",
     )
     api_key: str | None = Field(

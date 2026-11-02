@@ -20,7 +20,7 @@ def test_defaults() -> None:
 
 
 def test_url_normalization() -> None:
-    assert ServerConfig(voice_endpoint="xserver:9931").voice_endpoint == ("http://xserver:9931/v1")
+    assert ServerConfig(voice_endpoint="localhost:9931").voice_endpoint == ("http://localhost:9931/v1")
     assert ServerConfig(executor_endpoint="https://host/v1/").executor_endpoint == (
         "https://host/v1"
     )

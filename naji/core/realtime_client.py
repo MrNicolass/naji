@@ -18,7 +18,7 @@ from urllib.parse import quote, urlsplit
 import httpx
 import numpy as np
 
-DEFAULT_URL = "http://xserver:9931/v1"
+DEFAULT_URL = "http://localhost:9931/v1"
 DEFAULT_MODEL = "default"
 DEFAULT_VOICE = "female"
 DEFAULT_LANG = "pt"
