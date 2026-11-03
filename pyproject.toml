@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "naji"
-version = "0.3.0"
+version = "1.0.0"
 description = "Tray-first voice assistant for Windows and Linux"
 requires-python = ">=3.11"
 dependencies = [
